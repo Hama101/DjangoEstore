@@ -13,14 +13,18 @@ LABEL_CHOICES=(
     ('D' , 'danger'),
 )
 
+
 class Item(m.Model):
     title = m.CharField(max_length=100)
+    discount_price = m.FloatField(blank=True , null=True)
     price = m.FloatField()
     category = m.CharField(choices=CATEGORY_CHOICES ,
                             max_length=2)
     label = m.CharField(choices=LABEL_CHOICES ,
                             max_length=2)
     slug = m.SlugField()
+    description = m.TextField()
+
 
     def get_absolute_url(self):
         return reverse("estore:product",
@@ -37,7 +41,6 @@ class OderItem(m.Model):
 
     def __str__(self):
         return self.title
-
 
 
 class Order(m.Model):
