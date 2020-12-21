@@ -32,21 +32,38 @@ class Item(m.Model):
                         {"slug": self.slug}
                         )
 
+    def get_add_to_cart_url(self):
+        return reverse("estore:add-to-cart",
+                        kwargs=
+                        {"slug": self.slug}
+                        )
+
+    def get_remove_from_cart_url(self):
+        return reverse("estore:remove-from-cart",
+                        kwargs=
+                        {"slug": self.slug}
+                        )
+
     def __str__(self):
         return self.title
 
 
-class OderItem(m.Model):
+class OrderItem(m.Model):
+    user = m.ForeignKey(s.AUTH_USER_MODEL ,
+                        on_delete= m.CASCADE)
     item = m.ForeignKey(Item , on_delete=m.CASCADE)
 
+    ordered = m.BooleanField(default=False)
+    quantity = m.IntegerField(default=1)
+
     def __str__(self):
-        return self.title
+        return f"{self.quantity} of {self.item.title}"
 
 
 class Order(m.Model):
     user = m.ForeignKey(s.AUTH_USER_MODEL ,
-                        on_delete= m.CASCADE)
-    items =m.ManyToManyField(OderItem)
+                        on_delete= m.CASCADE )
+    items =m.ManyToManyField(OrderItem)
     start_date = m.DateTimeField(auto_now=True)
     ordered_date = m.DateTimeField()
     ordered = m.BooleanField(default=False)
